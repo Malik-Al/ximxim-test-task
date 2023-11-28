@@ -1,0 +1,24 @@
+{
+    "port": 8070,
+    "mySqlConfig": {
+        "host": "localhost",
+        "port": 3306,
+        "schema": "main",
+        "database": "my_database",
+        "dialect": "mysql", 
+        "auth": {
+            "user": "admin",
+            "password": "admin"
+        }
+    },
+    "logger": {
+        "timeZone": {
+            "lang": "ky-KG",
+            "region": "Asia/Bishkek"
+        },
+        "writeLogPath": {
+            "error": "msdata/logger/error.log",
+            "combined": "msdata/logger/combined.log"
+        }
+    }
+}
