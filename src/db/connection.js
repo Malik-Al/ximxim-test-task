@@ -23,7 +23,7 @@ exports.init = async function () {
     try {
         console.log('Database initialization...');
         // await exports.DB.authenticate();
-        await exports.DB.sync({ force: false });
+        await exports.DB.sync();
         console.log('Connection Database successfully completed!');
         console.log('All models have been successfully initialized!');
     } catch (error) {

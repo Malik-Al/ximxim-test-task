@@ -3,24 +3,32 @@ const sequelize = require('./sequelize');
 
 exports.File = sequelize.define('File', {
     id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
     file_uuid: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     file_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
-    mime_type:{
+    mime_type: {
         type: DataTypes.STRING,
         allowNull: false,
     },
     size: {
         type: DataTypes.STRING,
         allowNull: false,
-    }
-  });
+    },
+    created_at: {
+        type: DataTypes.TIME,
+        allowNull: false,
+    },
+    updated_at: {
+        type: DataTypes.TIME,
+        allowNull: false,
+    },
+});
