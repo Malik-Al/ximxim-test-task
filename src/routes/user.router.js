@@ -1,10 +1,12 @@
 const Router = require('express');
 const { body } = require('express-validator');
 const router = new Router();
+const authMiddleware = require('../middleware/auth.middleware');
 const {
     registration,
     authorizations,
     generateNewAccessToken,
+    userInfo
 } = require('../controllers/user.controller');
 
 router.post(
@@ -25,5 +27,11 @@ router.post(
     '/signin/new_token',
     body('refreshToken').isLength({ min: 320, max: 400 }),
     generateNewAccessToken,
+);
+
+router.get(
+    '/info',
+    authMiddleware,
+    userInfo,
 );
 module.exports = router;
