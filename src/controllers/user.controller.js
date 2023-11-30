@@ -3,7 +3,6 @@ const { validationResult } = require('express-validator');
 const apiError = require('../error/api.error');
 const logger = require('../../logger');
 
-
 class UserController {
     async registration(req, res, next) {
         logger.info(
@@ -98,22 +97,26 @@ class UserController {
         }
     }
 
-
-      async logout(req, res, next){
+    async logout(req, res, next) {
         try {
             const authorizationHeader = req.headers.authorization;
             const accessToken = authorizationHeader.split(' ')[1];
-            const result = await userService.logoutService(accessToken)
+            const result = await userService.logoutService(accessToken);
+            if (!result)
+                return next(
+                    apiError.badRequest(
+                        'Ошибка при выходе из системы',
+                        errors.array(),
+                    ),
+                );
             res.status(200).json({
                 message: 'successful logout',
-            });            
+            });
         } catch (error) {
             console.error('Error logout', error);
             next(error);
         }
-
     }
-
 }
 
 module.exports = new UserController();
