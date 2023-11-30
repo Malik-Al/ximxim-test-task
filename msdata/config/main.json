@@ -3,12 +3,11 @@
     "mySqlConfig": {
         "host": "localhost",
         "port": 3306,
-        "schema": "main",
-        "database": "my_database",
+        "database": "my_db",
         "dialect": "mysql", 
         "auth": {
-            "user": "admin",
-            "password": "admin"
+            "user": "root",
+            "password": "root"
         }
     },
     "logger": {
