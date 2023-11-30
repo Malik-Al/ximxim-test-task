@@ -3,7 +3,7 @@ const conf = require('../../msdata/config/main.json');
 const logger = require('../../logger');
 
 class Token {
-    generate(user) {
+    generateTokens(user) {
         logger.info(
             '[START] Метода generate для генераций accessToken и refreshToken',
         );
@@ -24,7 +24,41 @@ class Token {
             );
             return { accessToken, refreshToken };
         } catch (error) {
-            console.log(error);
+            console.error('Error generate', error);
+            throw error;
+        }
+    }
+
+    generateAccessToken(user) {
+        logger.info(
+            '[START] Метода generateAccessToken для генераций accessToken',
+        );
+        try {
+            const accessToken = jwt.sign(
+                { user },
+                conf.secretToken.accessToken.secret,
+                {
+                    expiresIn: conf.secretToken.accessToken.time,
+                },
+            );
+
+            return { accessToken };
+        } catch (error) {
+            console.error('Error generateAccessToken', error);
+            throw error;
+        }
+    }
+
+    validateRefreshToken(token) {
+        try {
+            const refreshData = jwt.verify(
+                token,
+                conf.secretToken.refreshToken.secret,
+            );
+            if (refreshData.user) return refreshData.user;
+        } catch (error) {
+            console.error('Error validateRefreshToken', error);
+            if (error.message === 'jwt expired') return false;
             throw error;
         }
     }
