@@ -10,6 +10,16 @@
             "password": "root"
         }
     },
+    "secretToken": {
+        "accessToken": {
+            "secret": "JWT_ACCESS_SECRET",
+            "time": "1m"
+          },
+          "refreshToken": {
+            "secret": "JWT_REFRESH_SECRET",
+            "time": "10m"
+          }
+    },
     "logger": {
         "timeZone": {
             "lang": "ky-KG",
