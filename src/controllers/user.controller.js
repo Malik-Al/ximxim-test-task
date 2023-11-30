@@ -63,6 +63,22 @@ class UserController {
             next(error);
         }
     }
+
+    async generateNewAccessToken(req, res, next) {
+        try {
+            const { refreshToken } = req.body;
+            const result = await userService.issueNewRefreshToken(refreshToken);
+
+            logger.info('[SUCCES] Получение нового accessToken прошла успешно');
+            res.status(200).json({
+                message: 'Access token successfully refreshed',
+                data: result,
+            });
+        } catch (error) {
+            console.error('Error generateNewAccessToken', error);
+            next(error);
+        }
+    }
 }
 
 module.exports = new UserController();
