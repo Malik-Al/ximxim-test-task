@@ -8,12 +8,20 @@ class Token {
             '[START] Метода generate для генераций accessToken и refreshToken',
         );
         try {
-            const accessToken = jwt.sign({ user }, conf.secretToken, {
-                expiresIn: '1m',
-            });
-            const refreshToken = jwt.sign({ user }, conf.secretToken, {
-                expiresIn: '10m',
-            });
+            const accessToken = jwt.sign(
+                { user },
+                conf.secretToken.accessToken,
+                {
+                    expiresIn: conf.secretToken.accessToken.time,
+                },
+            );
+            const refreshToken = jwt.sign(
+                { user },
+                conf.secretToken.refreshToken,
+                {
+                    expiresIn: conf.secretToken.refreshToken.time,
+                },
+            );
             return { accessToken, refreshToken };
         } catch (error) {
             console.log(error);
