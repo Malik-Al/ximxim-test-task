@@ -26,7 +26,10 @@ class UserController {
 
             if (result) {
                 logger.info('[SUCCES] Регистрация прошла успешно');
-                res.status(201).json({ message: 'Успешно прошла регистрация' });
+                res.status(201).json({
+                    message: 'Регистрация прошла успешно',
+                    data: result,
+                });
             }
         } catch (error) {
             console.log('error', error);
