@@ -151,6 +151,13 @@ class UserService {
 
             const user = await this.findOneService(accessTokenToken.id);
 
+            await User.update(
+                { refresh_token: null },
+                {
+                    where: { user_id: accessTokenToken.user_id },
+                },
+            );
+
             const result = await blackListTokens.appendBlacklist(
                 token,
                 user.refresh_token,
