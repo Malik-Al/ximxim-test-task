@@ -100,6 +100,16 @@ class UserService {
             '[START] Метода issueNewRefreshToken для обновления accessToken по refreshToken',
         );
         try {
+            const resultBlackListTokens = await blackListTokens.checkBlacklist({
+                refresh_token: refreshToken,
+            });
+            if (resultBlackListTokens) {
+                logger.info(
+                    '[SUCCESS] refreshToken токен находится в черном списки',
+                );
+                throw apiError.UnauthorizedError('Unauthorized');
+            }
+
             const isValidRefreshToken =
                 Token.validateRefreshToken(refreshToken);
             if (!isValidRefreshToken)
