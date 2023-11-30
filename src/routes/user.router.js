@@ -1,8 +1,11 @@
-const Router = require('express')
-const router = new Router()
-const {registration} = require('../controllers/user.controller')
+const Router = require('express');
+const { body } = require('express-validator');
+const router = new Router();
+const { registration } = require('../controllers/user.controller');
 
+router.post('/signup', 
+    body("id"), 
+    body("password").isLength({min: 6, max: 30}), 
+    registration);
 
-router.post('/signup', registration)
-
-module.exports = router
+module.exports = router;
