@@ -1,32 +1,35 @@
-const { Sequelize } = require('sequelize');
+const Sequelize = require('sequelize');
 const conf = require('../../msdata/config/main.json');
 
-exports.init = async function () {
-    exports.DB = new Sequelize(
-        conf.mySqlConfig.database,
-        conf.mySqlConfig.auth.user,
-        conf.mySqlConfig.auth.password,
-        {
-            host: conf.mySqlConfig.host,
-            // port: conf.mySqlConfig.schema,
-            port: conf.mySqlConfig.port,
-            dialect: conf.mySqlConfig.dialect,
-            pool: {
-                max: 20,
-                idleTimeoutMillis: 30000,
-                connectionTimeoutMillis: 2000,
-            },
-            logging: false,
+const sequelize = new Sequelize(
+    conf.mySqlConfig.database,
+    conf.mySqlConfig.auth.user,
+    conf.mySqlConfig.auth.password,
+    {
+        host: conf.mySqlConfig.host,
+        dialect: conf.mySqlConfig.dialect,
+        operatorsAliases: false,
+        pool: {
+            max: 20,
+            acquire: 30000,
+            idle: 10000,
         },
-    );
+        define: {
+            timestamps: false
+        },
+        // logging: false,
+    },
+);
 
-    try {
-        console.log('Database initialization...');
-        // await exports.DB.authenticate();
-        await exports.DB.sync();
-        console.log('Connection Database successfully completed!');
-        console.log('All models have been successfully initialized!');
-    } catch (error) {
-        new Error(error, 'Error connecting to the Database');
-    }
-};
+const db = {};
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+db.user = require('./user.model')(sequelize, Sequelize);
+db.file = require('./file.model')(sequelize, Sequelize);
+
+db.user.hasMany(db.user, {foreignKey: 'user_id'});
+db.file.belongsTo(db.file, {foreignKey: 'user_id'});
+
+module.exports = db;
