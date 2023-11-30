@@ -26,10 +26,10 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.user = require('./user.model')(sequelize, Sequelize);
-db.file = require('./file.model')(sequelize, Sequelize);
+db.User = require('./user.model')(sequelize, Sequelize);
+db.File = require('./file.model')(sequelize, Sequelize);
 
-db.user.hasMany(db.user, {foreignKey: 'user_id'});
-db.file.belongsTo(db.file, {foreignKey: 'user_id'});
+db.User.hasMany(db.User, {foreignKey: 'user_id'});
+db.File.belongsTo(db.File, {foreignKey: 'user_id'});
 
 module.exports = db;
