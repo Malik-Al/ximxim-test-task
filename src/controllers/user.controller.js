@@ -79,6 +79,23 @@ class UserController {
             next(error);
         }
     }
+
+    async userInfo(req, res, next) {
+        try {
+            const authorizationHeader = req.headers.authorization;
+            const accessToken = authorizationHeader.split(' ')[1];
+            const result = userService.userInfoService(accessToken);
+            res.status(200).json({
+                message: 'success',
+                data: {
+                    id: result,
+                },
+            });
+        } catch (error) {
+            console.error('Error generateNewAccessToken', error);
+            next(error);
+        }
+    }
 }
 
 module.exports = new UserController();
