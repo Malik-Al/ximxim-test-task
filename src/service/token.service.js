@@ -10,14 +10,14 @@ class Token {
         try {
             const accessToken = jwt.sign(
                 { user },
-                conf.secretToken.accessToken,
+                conf.secretToken.accessToken.secret,
                 {
                     expiresIn: conf.secretToken.accessToken.time,
                 },
             );
             const refreshToken = jwt.sign(
                 { user },
-                conf.secretToken.refreshToken,
+                conf.secretToken.refreshToken.secret,
                 {
                     expiresIn: conf.secretToken.refreshToken.time,
                 },
