@@ -2,23 +2,9 @@ const { User } = require('../db/connection');
 const logger = require('../../logger');
 const bcrypt = require('bcrypt');
 const Token = require('./token.service');
+const apiError = require('../error/api.error');
 
 class UserService {
-    async findOneService(id) {
-        logger.info(
-            '[START] findOneService Метода для поиска пользователя по полю id в базе',
-        );
-        try {
-            const result = await User.findAll({
-                where: { id: id },
-            });
-            return result.map((el) => el.dataValues.id)[0] ? true : false;
-        } catch (error) {
-            console.log('error', error);
-            throw error;
-        }
-    }
-
     async registrationService(id, password) {
         logger.info(
             '[START] registrationService Метода для записи пользователя в базу',
@@ -55,6 +41,37 @@ class UserService {
         }
     }
 
+    async authorizationsService(data) {
+        try {
+            const { id, password } = data;
+
+            const user = await this.findOneService(id);
+            if (!user) throw apiError.badRequest(`Пользователь не найден`);
+
+            const isPassEquals = await bcrypt.compare(password, user.password);
+            if (!isPassEquals) throw apiError.badRequest(`Неверный пароль`);
+
+            const userData = {
+                user_id: user.user_id,
+                id: user.id,
+                password: user.password,
+                created_at: user.created_at,
+            };
+
+            const tokens = Token.generate(userData);
+
+            await this.updateFieldRefreshToken(
+                user.user_id,
+                tokens.refreshToken,
+            );
+
+            return tokens;
+        } catch (error) {
+            console.log('Error authorizationsService:', error);
+            throw error;
+        }
+    }
+
     async updateFieldRefreshToken(userId, refreshToken) {
         logger.info(
             '[START] Метода updateFieldRefreshToken для обновление поле refresh_token у User',
@@ -73,6 +90,21 @@ class UserService {
                   );
         } catch (error) {
             console.log('Error updateFieldRefreshToken:', error);
+            throw error;
+        }
+    }
+
+    async findOneService(id) {
+        logger.info(
+            '[START] findOneService Метода для поиска пользователя по полю id в базе',
+        );
+        try {
+            const result = await User.findAll({
+                where: { id: id },
+            });
+            return result.map((el) => el.dataValues)[0];
+        } catch (error) {
+            console.log('error', error);
             throw error;
         }
     }
