@@ -9,8 +9,8 @@ class ApiError extends Error{
         return new ApiError(409, 'Пользователь уже существует')
     }
 
-    static UnauthorizedError(){
-        return new ApiError(401, 'Пользователь не авторизован')
+    static UnauthorizedError(message, errors){
+        return new ApiError(401, message, errors)
     }
 
     static badRequest(message, errors = []){
