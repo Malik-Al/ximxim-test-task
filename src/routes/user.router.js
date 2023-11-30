@@ -6,7 +6,8 @@ const {
     registration,
     authorizations,
     generateNewAccessToken,
-    userInfo
+    userInfo,
+    logout,
 } = require('../controllers/user.controller');
 
 router.post(
@@ -29,9 +30,7 @@ router.post(
     generateNewAccessToken,
 );
 
-router.get(
-    '/info',
-    authMiddleware,
-    userInfo,
-);
+router.get('/info', authMiddleware, userInfo);
+
+router.get('/logout', authMiddleware, logout);
 module.exports = router;
