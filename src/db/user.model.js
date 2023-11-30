@@ -15,14 +15,13 @@ module.exports = (sequelize, Sequelize) => {
             password: {
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false,
-                unique: true,
             },
             refresh_token: {
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false,
             },
             created_at: {
-                type: Sequelize.DataTypes.TIME,
+                type: Sequelize.DataTypes.DATE,
                 allowNull: false,
             },
         },
