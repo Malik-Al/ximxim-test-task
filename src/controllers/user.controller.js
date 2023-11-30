@@ -5,7 +5,9 @@ const logger = require('../../logger');
 
 class UserController {
     async registration(req, res, next) {
-        logger.info(`[START] Запуск метода для Регистрации пользователя`);
+        logger.info(
+            `[START] Запуск метода registration для Регистрации пользователя`,
+        );
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
@@ -33,6 +35,31 @@ class UserController {
             }
         } catch (error) {
             console.log('error', error);
+            next(error);
+        }
+    }
+
+    async authorizations(req, res, next) {
+        logger.info(
+            `[START] Запуск метода authorizations для Авторизация пользователя`,
+        );
+        try {
+            const { id, password } = req.body;
+
+            const result = await userService.authorizationsService({
+                id,
+                password,
+            });
+
+            if (result) {
+                logger.info('[SUCCES] Авторизация прошла успешно');
+                res.status(200).json({
+                    message: 'Авторизация прошла успешно',
+                    data: result,
+                });
+            }
+        } catch (error) {
+            console.error('Error authorizations', error);
             next(error);
         }
     }
