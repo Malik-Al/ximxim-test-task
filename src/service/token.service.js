@@ -49,7 +49,27 @@ class Token {
         }
     }
 
+    validateAccessTokenToken(token) {
+        logger.info(
+            '[START] Метода validateAccessTokenToken для проверки accessToken',
+        );
+        try {
+            const accessData = jwt.verify(
+                token,
+                conf.secretToken.accessToken.secret,
+            );
+            if (accessData.user) return accessData.user;
+        } catch (error) {
+            console.error('Error validateAccessTokenToken', error);
+            if (error.message === 'jwt expired') return false;
+            throw error;
+        }
+    }
+
     validateRefreshToken(token) {
+        logger.info(
+            '[START] Метода validateAccessTokenToken для проверки refreshToken',
+        );
         try {
             const refreshData = jwt.verify(
                 token,
