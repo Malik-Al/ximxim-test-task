@@ -27,7 +27,7 @@ class UserService {
                 created_at: newUser.dataValues.created_at,
             };
 
-            const tokens = Token.generate(user);
+            const tokens = Token.generateTokens(user);
 
             await this.updateFieldRefreshToken(
                 newUser.dataValues.user_id,
@@ -58,7 +58,7 @@ class UserService {
                 created_at: user.created_at,
             };
 
-            const tokens = Token.generate(userData);
+            const tokens = Token.generateTokens(userData);
 
             await this.updateFieldRefreshToken(
                 user.user_id,
@@ -94,9 +94,30 @@ class UserService {
         }
     }
 
+    async issueNewRefreshToken(refreshToken) {
+        logger.info(
+            '[START] Метода issueNewRefreshToken для обновления accessToken по refreshToken',
+        );
+        try {
+            const isValidRefreshToken =
+                Token.validateRefreshToken(refreshToken);
+            if (!isValidRefreshToken)
+                throw apiError.UnauthorizedError(
+                    `Refresh token has expired`,
+                    'Unauthorized',
+                );
+
+            const accessToken = Token.generateAccessToken(isValidRefreshToken);
+            return accessToken;
+        } catch (error) {
+            console.log('Error issueNewRefreshToken:', error);
+            throw error;
+        }
+    }
+
     async findOneService(id) {
         logger.info(
-            '[START] findOneService Метода для поиска пользователя по полю id в базе',
+            '[START] Метода findOneService для поиска пользователя по полю id в базе',
         );
         try {
             const result = await User.findAll({
