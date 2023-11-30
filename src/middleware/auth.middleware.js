@@ -1,13 +1,17 @@
 const apiError = require('../error/api.error');
 const Token = require('../service/token.service');
+const BlackListTokens = require('../service/black.list.tokens.service');
 
-module.exports = function (req, res, next) {
+module.exports = async function (req, res, next) {
     try {
         const authorizationHeader = req.headers.authorization;
         if (!authorizationHeader)
             return next(apiError.UnauthorizedError('Unauthorized'));
 
         const accessToken = authorizationHeader.split(' ')[1];
+
+        const resultBlackListTokens = await BlackListTokens.checkBlacklist({access_token: accessToken})
+        if (resultBlackListTokens) return next(apiError.UnauthorizedError('Unauthorized'));
 
         const user = Token.validateAccessTokenToken(accessToken);
 
