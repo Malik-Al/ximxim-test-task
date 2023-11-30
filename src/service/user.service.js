@@ -3,6 +3,7 @@ const logger = require('../../logger');
 const bcrypt = require('bcrypt');
 const Token = require('./token.service');
 const apiError = require('../error/api.error');
+const blackListTokens = require('../service/black.list.tokens.service');
 
 class UserService {
     async registrationService(id, password) {
@@ -125,7 +126,7 @@ class UserService {
             });
             return result.map((el) => el.dataValues)[0];
         } catch (error) {
-            console.log('error', error);
+            console.error('Error findOneService error', error);
             throw error;
         }
     }
@@ -139,6 +140,24 @@ class UserService {
             return result.id;
         } catch (error) {
             console.error('Error userInfoService error', error);
+            throw error;
+        }
+    }
+
+    async logoutService(token) {
+        logger.info('[START] Метода logoutService для выхода');
+        try {
+            const accessTokenToken = Token.validateAccessTokenToken(token);
+
+            const user = await this.findOneService(accessTokenToken.id);
+
+            const result = await blackListTokens.appendBlacklist(
+                token,
+                user.refresh_token,
+            );
+            return result;
+        } catch (error) {
+            console.error('Error logoutService error', error);
             throw error;
         }
     }
