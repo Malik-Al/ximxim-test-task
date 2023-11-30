@@ -129,6 +129,19 @@ class UserService {
             throw error;
         }
     }
+
+    userInfoService(token) {
+        logger.info(
+            '[START] Метода userInfoService для получения пользователя id',
+        );
+        try {
+            const result = Token.validateAccessTokenToken(token);
+            return result.id;
+        } catch (error) {
+            console.error('Error userInfoService error', error);
+            throw error;
+        }
+    }
 }
 
 module.exports = new UserService();
