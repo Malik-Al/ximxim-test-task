@@ -38,14 +38,41 @@ class UserService {
                 user_id: newUser.dataValues.user_id,
                 id: newUser.dataValues.id,
                 password: newUser.dataValues.password,
-                created_at: newUser.dataValues.created_at
-            }
+                created_at: newUser.dataValues.created_at,
+            };
 
             const tokens = Token.generate(user);
-            return tokens
-            
+
+            await this.updateFieldRefreshToken(
+                newUser.dataValues.user_id,
+                tokens.refreshToken,
+            );
+
+            return tokens;
         } catch (error) {
-            console.log('error', error);
+            console.log('Error registrationService:', error);
+            throw error;
+        }
+    }
+
+    async updateFieldRefreshToken(userId, refreshToken) {
+        logger.info(
+            '[START] Метода updateFieldRefreshToken для обновление поле refresh_token у User',
+        );
+        try {
+            const result = await User.update(
+                { refresh_token: refreshToken },
+                {
+                    where: { user_id: userId },
+                },
+            );
+            result[0]
+                ? logger.info('[SUCCESS] Успешно обновилась поле refresh_token')
+                : logger.warn(
+                      '[ERROR] Произошла ошибка при обновление поле refresh_token',
+                  );
+        } catch (error) {
+            console.log('Error updateFieldRefreshToken:', error);
             throw error;
         }
     }
