@@ -1,5 +1,7 @@
 const { User } = require('../db/connection');
 const logger = require('../../logger');
+const bcrypt = require('bcrypt');
+
 
 class UserService {
     async findOneService(id) {
@@ -19,9 +21,10 @@ class UserService {
     async registrationService(id, password) {
         logger.info('[START] registrationService Метода для записи пользователя в базу')
         try {
+            const hashPassword = await bcrypt.hash(password, 5);
             const body = {
                 id,
-                password,
+                password: hashPassword,
                 refresh_token: "refresh_token",
                 created_at: new Date()
             }
