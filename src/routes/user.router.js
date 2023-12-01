@@ -12,14 +12,14 @@ const {
 
 router.post(
     '/signup',
-    body('id'),
+    body('id').isEmail(),
     body('password').isLength({ min: 6, max: 30 }),
     registration,
 );
 
 router.post(
     '/signin',
-    body('id'),
+    body('id').isEmail(),
     body('password').isLength({ min: 6, max: 30 }),
     authorizations,
 );
@@ -31,6 +31,6 @@ router.post(
 );
 
 router.get('/info', authMiddleware, userInfo);
-
 router.get('/logout', authMiddleware, logout);
+
 module.exports = router;

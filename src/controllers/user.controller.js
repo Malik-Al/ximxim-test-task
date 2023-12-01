@@ -111,6 +111,7 @@ class UserController {
                 );
             res.status(200).json({
                 message: 'successful logout',
+                data: result
             });
         } catch (error) {
             console.error('Error logout', error);

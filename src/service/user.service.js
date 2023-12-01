@@ -168,11 +168,20 @@ class UserService {
                 },
             );
 
-            const result = await blackListTokens.appendBlacklist(
+            await blackListTokens.appendBlacklist(
                 token,
                 user.refresh_token,
             );
-            return result;
+
+            const userData = {
+                user_id: accessTokenToken.user_id,
+                id: accessTokenToken.id,
+                password: accessTokenToken.password,
+                created_at: new Date(),
+            };
+
+            const tokens = Token.generateTokens(userData);
+            return tokens;
         } catch (error) {
             console.error('Error logoutService error', error);
             throw error;
