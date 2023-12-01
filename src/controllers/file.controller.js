@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const apiError = require('../error/api.error');
 const logger = require('../../logger');
 const FileService = require('../service/files.service');
+const path = require('path');
 
 class FileController {
     async uploadfile(req, res, next) {
@@ -39,6 +40,33 @@ class FileController {
             });
         } catch (error) {
             console.error('Error findOne', error);
+            next(error);
+        }
+    }
+
+    async downloadFile(req, res, next) {
+        try {
+            const { id } = req.params;
+            const file = await FileService.findOneFileService(id);
+            if (!file) return next(apiError.badRequest('Not found file'));
+            const filePath = path.resolve(
+                __dirname,
+                '../../msdata/static',
+                file.file_name,
+            );
+
+            res.download(filePath, (err) => {
+                if (err) {
+                    console.error('Ошибка при скачивании файла:', err);
+                    return next(
+                        apiError.badRequest(
+                            'Internal Server Error',
+                        ),
+                    );
+                }
+            });
+        } catch (error) {
+            console.error('Error downloadFile', error);
             next(error);
         }
     }
