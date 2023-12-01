@@ -13,11 +13,11 @@
     "secretToken": {
         "accessToken": {
             "secret": "JWT_ACCESS_SECRET",
-            "time": "10m"
+            "time": "15m"
           },
           "refreshToken": {
             "secret": "JWT_REFRESH_SECRET",
-            "time": "20m"
+            "time": "30m"
           }
     },
     "logger": {
