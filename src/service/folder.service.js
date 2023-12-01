@@ -35,7 +35,7 @@ class FolderService {
         try {
             const isFile = await this.searchFile(file);
             if (!isFile) {
-                await createFile(file);
+                await this.createFile(file);
                 return true;
             }
             return false;
