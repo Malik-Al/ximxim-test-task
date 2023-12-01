@@ -105,6 +105,21 @@ class FileController {
             next(error);
         }
     }
+
+    async removeFile(req, res, next) {
+        logger.info(`[START] Запуск метода removeFile для удаление файла`);
+        try {
+            const { id } = req.params;
+            const result = await FileService.removeFileService(id);
+            if (!result) return next(apiError.badRequest('Not found file'));
+            res.status(200).json({
+                message: 'success',
+            });
+        } catch (error) {
+            console.error('Error removeFile', error);
+            next(error);
+        }
+    }
 }
 
 module.exports = new FileController();

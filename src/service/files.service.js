@@ -3,6 +3,7 @@ const { File } = require('../db/connection');
 const logger = require('../../logger');
 const Token = require('./token.service');
 const FolderService = require('./folder.service');
+const apiError = require('../error/api.error');
 
 class FileService {
     async uploaderService(file, accessToken) {
@@ -89,7 +90,7 @@ class FileService {
         );
         try {
             const fileOne = await this.findOneFileService(id);
-            if (!fileOne) return next(apiError.badRequest('File not found'));
+            if (!fileOne) return apiError.badRequest('File not found') && null;
             await FolderService.removeFile(fileOne.file_name);
 
             await FolderService.createFile(file);
@@ -103,6 +104,26 @@ class FileService {
             return update[0];
         } catch (error) {
             console.error('Error updateFileService', error);
+            throw error;
+        }
+    }
+
+    async removeFileService(id) {
+        logger.info(
+            '[START] Метода removeFileService для удаление файла из базы и из базы',
+        );
+        try {
+            const fileOne = await this.findOneFileService(id);
+            if (!fileOne) return apiError.badRequest('File not found') && null;
+
+            const result = await File.destroy({
+                where: { file_id: fileOne.file_id },
+            });
+
+            await FolderService.removeFile(fileOne.file_name);
+            return result
+        } catch (error) {
+            console.error('Error removeFileService', error);
             throw error;
         }
     }
