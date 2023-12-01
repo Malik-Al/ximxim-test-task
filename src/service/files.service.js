@@ -1,56 +1,23 @@
 const path = require('path');
-const fs = require('fs');
 const { File } = require('../db/connection');
-const { promisify } = require('util');
-const readdir = promisify(fs.readdir);
 const logger = require('../../logger');
 const Token = require('./token.service');
+const FolderService = require('./folder.service');
 
 class FileService {
-    pathGenerateUrl(fileName) {
-        try {
-            if (fileName)
-                return path.resolve(
-                    __dirname,
-                    '../../msdata',
-                    'static',
-                    fileName,
-                );
-            return path.resolve(__dirname, '../../msdata', 'static');
-        } catch (error) {
-            console.error('Error pathGenerateUrl', error);
-            throw error;
-        }
-    }
-
     async uploader(file, accessToken) {
         logger.info('[START] Метода uploader для загрузки файла в папку');
         try {
-            const isFile = await this.searchFile(file);
+            const isFile = await FolderService.searchFile(file);
             if (!isFile) {
-                await file.mv(path.resolve(this.pathGenerateUrl(file.name)));
+                await file.mv(
+                    path.resolve(FolderService.pathGenerateUrl(file.name)),
+                );
                 return await this.createFileDB(file, accessToken);
             }
             return false;
         } catch (error) {
-            console.error('Error generateAccessToken', error);
-            throw error;
-        }
-    }
-
-    async searchFile(file) {
-        logger.info('[START] Метода searchFile для поика файла в папке');
-        try {
-            const pathUrl = this.pathGenerateUrl();
-            if (!fs.existsSync(pathUrl)) {
-                fs.mkdirSync(pathUrl);
-                await file.mv(path.resolve(this.pathGenerateUrl(file.name)));
-                return false;
-            }
-            const listFile = await readdir(pathUrl);
-            return listFile.includes(file.name);
-        } catch (error) {
-            console.error('Error searchFile', error);
+            console.error('Error uploader', error);
             throw error;
         }
     }
@@ -80,7 +47,9 @@ class FileService {
     }
 
     async findFilesFromDB(page, listSize) {
-        logger.info('[START] Метода findFilesFromDB для получения данных из базы по опциональным параметрам');
+        logger.info(
+            '[START] Метода findFilesFromDB для получения данных из базы по опциональным параметрам',
+        );
         try {
             const offset = (page - 1) * listSize;
 
