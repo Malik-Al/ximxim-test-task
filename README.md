@@ -1,8 +1,7 @@
 # Test project for companies ximxim
 
-Общая информация
+General information
 
-- Разработка велась в операционной системе CentOS 7
 - Version nodejs v18.14.2
 - The configuration is located in the msdata/config directory
 - the chronology of static content in the msdata/static directory 
