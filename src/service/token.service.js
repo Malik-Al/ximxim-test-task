@@ -12,14 +12,14 @@ class Token {
                 { user },
                 conf.secretToken.accessToken.secret,
                 {
-                    expiresIn: conf.secretToken.accessToken.time,
+                    expiresIn: `${conf.secretToken.accessToken.time}`,
                 },
             );
             const refreshToken = jwt.sign(
                 { user },
                 conf.secretToken.refreshToken.secret,
                 {
-                    expiresIn: conf.secretToken.refreshToken.time,
+                    expiresIn: `${conf.secretToken.refreshToken.time}`,
                 },
             );
             return { accessToken, refreshToken };
@@ -38,7 +38,7 @@ class Token {
                 { user },
                 conf.secretToken.accessToken.secret,
                 {
-                    expiresIn: conf.secretToken.accessToken.time,
+                    expiresIn: `${conf.secretToken.accessToken.time}`,
                 },
             );
 
@@ -56,7 +56,7 @@ class Token {
         try {
             const accessData = jwt.verify(
                 token,
-                conf.secretToken.accessToken.secret,
+                `${conf.secretToken.accessToken.secret}`,
             );
             if (accessData.user) return accessData.user;
         } catch (error) {
@@ -73,7 +73,7 @@ class Token {
         try {
             const refreshData = jwt.verify(
                 token,
-                conf.secretToken.refreshToken.secret,
+                `${conf.secretToken.refreshToken.secret}`,
             );
             if (refreshData.user) return refreshData.user;
         } catch (error) {
