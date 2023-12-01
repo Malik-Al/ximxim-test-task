@@ -1,4 +1,5 @@
 .idea/
 msdata/logger
+msdata/static
 /node_modules
 .env
