@@ -15,17 +15,15 @@ General information
 
 ## Usage
 
-- Run 
+- Run development
 ``` 
 npm run dev
 ```
-development.
 
-- Run 
+- Run prod
 ```
 npm run start
 ``` 
-prod.
 
 ## Docker command run database
 ``` 
