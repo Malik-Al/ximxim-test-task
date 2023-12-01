@@ -8,10 +8,6 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            file_uuid: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
             file_name: {
                 type: DataTypes.STRING,
                 allowNull: false,
@@ -23,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
             size: {
                 type: DataTypes.STRING,
                 allowNull: false,
+            },
+            user_id: {
+                type: DataTypes.INTEGER, 
+                allowNull: false
             },
             created_at: {
                 type: DataTypes.DATE,
