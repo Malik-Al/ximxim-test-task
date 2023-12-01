@@ -11,7 +11,7 @@ class FileController {
             const accessToken = authorizationHeader.split(' ')[1];
 
             const { file } = req.files;
-            const result = await FileService.uploader(file, accessToken);
+            const result = await FileService.uploaderService(file, accessToken);
             if (!result)
                 return next(
                     apiError.badRequest(
@@ -27,6 +27,22 @@ class FileController {
         }
     }
 
+    async findOne(req, res, next) {
+        logger.info(`[START] Запуск метода findOne для получения файла`);
+        try {
+            const { id } = req.params;
+            const file = await FileService.findOneFileService(id);
+            if (!file) return next(apiError.badRequest('Not found file'));
+            res.status(200).json({
+                message: 'success',
+                data: file,
+            });
+        } catch (error) {
+            console.error('Error findOne', error);
+            next(error);
+        }
+    }
+
     async findFiles(req, res, next) {
         logger.info(
             `[START] Запуск метода findFiles для получения всех файлов`,
@@ -35,7 +51,10 @@ class FileController {
             const page = parseInt(req.query.page) || 1;
             const listSize = parseInt(req.query.list_size) || 10;
 
-            const result = await FileService.findFilesFromDB(page, listSize);
+            const result = await FileService.findFilesFromDBService(
+                page,
+                listSize,
+            );
             res.status(200).json({
                 message: 'success',
                 total: result[1],

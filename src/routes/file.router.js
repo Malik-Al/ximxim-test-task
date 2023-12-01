@@ -1,9 +1,11 @@
 const Router = require('express');
 const router = new Router();
 const authMiddleware = require('../middleware/auth.middleware');
-const { uploadfile, findFiles } = require('../controllers/file.controller');
+const { uploadfile, findFiles, findOne } = require('../controllers/file.controller');
 
-router.post('/file/upload', authMiddleware, uploadfile);
-router.get('/file/list', authMiddleware, findFiles);
+router.get('/:id', authMiddleware, findOne);
+router.get('/list', authMiddleware, findFiles);
+router.post('/upload', authMiddleware, uploadfile);
+
 
 module.exports = router;

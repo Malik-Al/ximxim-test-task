@@ -5,8 +5,8 @@ const Token = require('./token.service');
 const FolderService = require('./folder.service');
 
 class FileService {
-    async uploader(file, accessToken) {
-        logger.info('[START] Метода uploader для загрузки файла в папку');
+    async uploaderService(file, accessToken) {
+        logger.info('[START] Метода uploaderService для загрузки файла в папку');
         try {
             const isFile = await FolderService.searchFile(file);
             if (!isFile) {
@@ -17,13 +17,13 @@ class FileService {
             }
             return false;
         } catch (error) {
-            console.error('Error uploader', error);
+            console.error('Error uploaderService', error);
             throw error;
         }
     }
 
-    async createFileDB(file, accessToken) {
-        logger.info('[START] Метода createFileDB для записи файла в базу');
+    async createFileDBService(file, accessToken) {
+        logger.info('[START] Метода createFileDBService для записи файла в базу');
         try {
             const user = Token.validateAccessTokenToken(accessToken);
             const data = {
@@ -41,14 +41,27 @@ class FileService {
                 : logger.error('[ERROR] Произошла ошибка при записи в базу');
             return craeteFile.dataValues.file_id;
         } catch (error) {
-            console.error('Error createFileDB', error);
+            console.error('Error createFileDBService', error);
             throw error;
         }
     }
 
-    async findFilesFromDB(page, listSize) {
+    async findOneFileService(id) {
+        logger.info('[START] Метода findOneFileService для получения одного файла');
+        try {
+            const res = await File.findByPk(id);
+            if(!res) return  logger.info('[ERROR] Нет такого файла') && null 
+            logger.info('[SUCCESS] Успешно нашел файл');
+            return res.dataValues
+        } catch (error) {
+            console.error('Error findOneFileService', error);
+            throw error;
+        }
+    }
+
+    async findFilesFromDBService(page, listSize) {
         logger.info(
-            '[START] Метода findFilesFromDB для получения данных из базы по опциональным параметрам',
+            '[START] Метода findFilesFromDBService для получения данных из базы по опциональным параметрам',
         );
         try {
             const offset = (page - 1) * listSize;
@@ -63,7 +76,7 @@ class FileService {
 
             return [files.map((el) => el.dataValues), totalCount];
         } catch (error) {
-            console.error('Error createFileDB', error);
+            console.error('Error findFilesFromDBService', error);
             throw error;
         }
     }
