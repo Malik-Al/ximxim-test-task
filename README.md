@@ -24,10 +24,12 @@ development.
 - Run 
 ```
 npm run start
-``` prod.
+``` 
+prod.
 
 ## Docker command run database
-``` docker run -d --name my-mysql-v1-container -p 3306:3306 my-mysql-image
+``` 
+docker run -d --name my-mysql-v1-container -p 3306:3306 my-mysql-image
 ```
 
 ## Contact
