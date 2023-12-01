@@ -27,7 +27,7 @@ npm run start
 
 ## Docker command run database
 ``` 
-docker run -d --name my-mysql-v1-container -p 3306:3306 my-mysql-image
+docker run -d --name my-mysql-v1-container -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=my_db -p 3306:3306 mysql:latest
 ```
 
 ## Contact
