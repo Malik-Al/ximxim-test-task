@@ -15,9 +15,20 @@ General information
 
 ## Usage
 
-- Run `npm run dev` development.
+- Run 
+``` 
+npm run dev
+```
+development.
 
-- Run `npm run start` prod.
+- Run 
+```
+npm run start
+``` prod.
+
+## Docker command run database
+``` docker run -d --name my-mysql-v1-container -p 3306:3306 my-mysql-image
+```
 
 ## Contact
 
