@@ -59,11 +59,7 @@ class FileController {
             res.download(filePath, (err) => {
                 if (err) {
                     logger.error('Ошибка при скачивании файла:', err);
-                    return next(
-                        apiError.badRequest(
-                            'Internal Server Error',
-                        ),
-                    );
+                    return next(apiError.internal('Internal Server Error'));
                 }
             });
         } catch (error) {
@@ -91,6 +87,21 @@ class FileController {
             });
         } catch (error) {
             console.error('Error findFiles', error);
+            next(error);
+        }
+    }
+
+    async updateFile(req, res, next) {
+        logger.info(`[START] Запуск метода updateFile для обновления файла`);
+        try {
+            const { id } = req.params;
+            const { file } = req.files;
+            await FileService.updateFileService(id, file);
+            res.status(200).json({
+                message: 'success update file',
+            });
+        } catch (error) {
+            console.error('Error updateFile', error);
             next(error);
         }
     }

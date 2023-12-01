@@ -6,16 +6,14 @@ const FolderService = require('./folder.service');
 
 class FileService {
     async uploaderService(file, accessToken) {
-        logger.info('[START] Метода uploaderService для загрузки файла в папку');
+        logger.info(
+            '[START] Метода uploaderService для загрузки файла в папку',
+        );
         try {
-            const isFile = await FolderService.searchFile(file);
-            if (!isFile) {
-                await file.mv(
-                    path.resolve(FolderService.pathGenerateUrl(file.name)),
-                );
-                return await this.createFileDB(file, accessToken);
-            }
-            return false;
+            const isFile = await FolderService.isFileMethod(file);
+            if (!isFile) return false;
+
+            return await this.createFileDBService(file, accessToken);
         } catch (error) {
             console.error('Error uploaderService', error);
             throw error;
@@ -23,7 +21,9 @@ class FileService {
     }
 
     async createFileDBService(file, accessToken) {
-        logger.info('[START] Метода createFileDBService для записи файла в базу');
+        logger.info(
+            '[START] Метода createFileDBService для записи файла в базу',
+        );
         try {
             const user = Token.validateAccessTokenToken(accessToken);
             const data = {
@@ -47,12 +47,14 @@ class FileService {
     }
 
     async findOneFileService(id) {
-        logger.info('[START] Метода findOneFileService для получения одного файла');
+        logger.info(
+            '[START] Метода findOneFileService для получения одного файла',
+        );
         try {
             const res = await File.findByPk(id);
-            if(!res) return  logger.info('[ERROR] Нет такого файла') && null 
+            if (!res) return logger.info('[ERROR] Нет такого файла') && null;
             logger.info('[SUCCESS] Успешно нашел файл');
-            return res.dataValues
+            return res.dataValues;
         } catch (error) {
             console.error('Error findOneFileService', error);
             throw error;
@@ -77,6 +79,30 @@ class FileService {
             return [files.map((el) => el.dataValues), totalCount];
         } catch (error) {
             console.error('Error findFilesFromDBService', error);
+            throw error;
+        }
+    }
+
+    async updateFileService(id, file) {
+        logger.info(
+            '[START] Метода updateFileService для обновления файла в базе',
+        );
+        try {
+            const fileOne = await this.findOneFileService(id);
+            if (!fileOne) return next(apiError.badRequest('File not found'));
+            await FolderService.removeFile(fileOne.file_name);
+
+            await FolderService.createFile(file);
+
+            const update = await File.update(
+                { file_name: file.name },
+                {
+                    where: { file_id: fileOne.file_id },
+                },
+            );
+            return update[0];
+        } catch (error) {
+            console.error('Error updateFileService', error);
             throw error;
         }
     }

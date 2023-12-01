@@ -3,6 +3,7 @@ const fs = require('fs');
 const { promisify } = require('util');
 const readdir = promisify(fs.readdir);
 const logger = require('../../logger');
+const conf = require('../../msdata/config/main.json');
 
 class FolderService {
     pathGenerateUrl(fileName) {
@@ -10,13 +11,51 @@ class FolderService {
             if (fileName)
                 return path.resolve(
                     __dirname,
-                    '../../msdata',
-                    'static',
+                    conf.folder.path,
+                    conf.folder.name,
                     fileName,
                 );
-            return path.resolve(__dirname, '../../msdata', 'static');
+            return path.resolve(__dirname, conf.folder.path, conf.folder.name);
         } catch (error) {
             console.error('Error pathGenerateUrl', error);
+            throw error;
+        }
+    }
+
+    async createFile(file) {
+        try {
+            await file.mv(path.resolve(this.pathGenerateUrl(file.name)));
+        } catch (error) {
+            console.error('Error createFile', error);
+            throw error;
+        }
+    }
+
+    async isFileMethod(file) {
+        try {
+            const isFile = await this.searchFile(file);
+            if (!isFile) {
+                await createFile(file);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error isFileMethod', error);
+            throw error;
+        }
+    }
+
+    async removeFile(fileName) {
+        try {
+            const pathUrl = this.pathGenerateUrl();
+            const listFile = await readdir(pathUrl);
+            const img = listFile.filter((file) => file.includes(fileName));
+            const fileDelete = path.resolve(pathUrl, img[0]);
+            fs.unlink(fileDelete, function (err) {
+                if (err) throw err;
+            });
+        } catch (error) {
+            console.error('Error removeFile', error);
             throw error;
         }
     }

@@ -10,6 +10,10 @@
             "password": "root"
         }
     },
+    "folder": {
+        "name": "static",
+        "path": "../../msdata"
+    },
     "secretToken": {
         "accessToken": {
             "secret": "JWT_ACCESS_SECRET",
