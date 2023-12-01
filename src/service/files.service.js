@@ -9,7 +9,14 @@ const Token = require('./token.service');
 class FileService {
     pathGenerateUrl(fileName) {
         try {
-            return path.resolve(__dirname, '../../msdata', 'static', fileName);
+            if (fileName)
+                return path.resolve(
+                    __dirname,
+                    '../../msdata',
+                    'static',
+                    fileName,
+                );
+            return path.resolve(__dirname, '../../msdata', 'static');
         } catch (error) {
             console.error('Error pathGenerateUrl', error);
             throw error;
@@ -19,10 +26,25 @@ class FileService {
     async uploader(file, accessToken) {
         logger.info('[START] Метода uploader для загрузки файла в папку');
         try {
-            await file.mv(path.resolve(this.pathGenerateUrl(file.name)));
-            await this.createFileDB(file, accessToken);
+            const isFile = await this.searchFile(file.name);
+            if (!isFile) {
+                await file.mv(path.resolve(this.pathGenerateUrl(file.name)));
+                return await this.createFileDB(file, accessToken)
+            }
         } catch (error) {
             console.error('Error generateAccessToken', error);
+            throw error;
+        }
+    }
+
+    async searchFile(fileName) {
+        logger.info('[START] Метода searchFile для поика файла в папке');
+        try {
+            const pathUrl = this.pathGenerateUrl();
+            const listFile = await readdir(pathUrl);
+            return listFile.includes(fileName);
+        } catch (error) {
+            console.error('Error searchFile', error);
             throw error;
         }
     }
