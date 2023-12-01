@@ -11,9 +11,9 @@ class FileController {
             const accessToken = authorizationHeader.split(' ')[1];
 
             const { file } = req.files;
-            await FileService.uploader(file, accessToken);
-
-            res.status(202).json({
+            const result = await FileService.uploader(file, accessToken);
+            if(!result) return next(apiError.badRequest('File with this name is already in the database'));
+            res.status(200).json({
                 message: 'File was successfully written',
             });
         } catch (error) {
