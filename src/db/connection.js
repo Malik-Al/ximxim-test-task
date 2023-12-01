@@ -30,7 +30,7 @@ db.User = require('./user.model')(sequelize, Sequelize);
 db.File = require('./file.model')(sequelize, Sequelize);
 db.BlacklistTokens = require('./black.list.tokens.model')(sequelize, Sequelize);
 
-db.User.hasMany(db.User, {foreignKey: 'user_id'});
-db.File.belongsTo(db.File, {foreignKey: 'user_id'});
+db.User.hasMany(db.File, {foreignKey: 'user_id'});
+db.File.belongsTo(db.User, {foreignKey: 'user_id'});
 
 module.exports = db;
