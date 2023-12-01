@@ -45,6 +45,7 @@ class FileController {
     }
 
     async downloadFile(req, res, next) {
+        logger.info(`[START] Запуск метода downloadFile для скачивания файла`);
         try {
             const { id } = req.params;
             const file = await FileService.findOneFileService(id);
@@ -57,7 +58,7 @@ class FileController {
 
             res.download(filePath, (err) => {
                 if (err) {
-                    console.error('Ошибка при скачивании файла:', err);
+                    logger.error('Ошибка при скачивании файла:', err);
                     return next(
                         apiError.badRequest(
                             'Internal Server Error',
