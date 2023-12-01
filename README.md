@@ -17,17 +17,8 @@ General information
 
 - Run `npm run dev` development.
 
-- Run `npm run start` prop.
-
-## Contributing
-
-
-Feel free to contribute by opening an issue or creating a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- Run `npm run start` prod.
 
 ## Contact
 
-For questions, contact me at example@example.com.
+For questions, contact me at malikimenov@gmail.com
