@@ -31,7 +31,7 @@ class FileService {
                 await file.mv(path.resolve(this.pathGenerateUrl(file.name)));
                 return await this.createFileDB(file, accessToken);
             }
-            return false
+            return false;
         } catch (error) {
             console.error('Error generateAccessToken', error);
             throw error;
@@ -73,6 +73,26 @@ class FileService {
                 ? logger.info('[SUCCESS] Успешно записано в базу')
                 : logger.error('[ERROR] Произошла ошибка при записи в базу');
             return craeteFile.dataValues.file_id;
+        } catch (error) {
+            console.error('Error createFileDB', error);
+            throw error;
+        }
+    }
+
+    async findFilesFromDB(page, listSize) {
+        logger.info('[START] Метода findFilesFromDB для получения данных из базы по опциональным параметрам');
+        try {
+            const offset = (page - 1) * listSize;
+
+            const files = await File.findAll({
+                limit: listSize,
+                offset: offset,
+                order: [['created_at', 'DESC']],
+            });
+
+            const totalCount = await File.count();
+
+            return [files.map((el) => el.dataValues), totalCount];
         } catch (error) {
             console.error('Error createFileDB', error);
             throw error;
