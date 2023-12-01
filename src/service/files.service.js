@@ -26,23 +26,29 @@ class FileService {
     async uploader(file, accessToken) {
         logger.info('[START] Метода uploader для загрузки файла в папку');
         try {
-            const isFile = await this.searchFile(file.name);
+            const isFile = await this.searchFile(file);
             if (!isFile) {
                 await file.mv(path.resolve(this.pathGenerateUrl(file.name)));
-                return await this.createFileDB(file, accessToken)
+                return await this.createFileDB(file, accessToken);
             }
+            return false
         } catch (error) {
             console.error('Error generateAccessToken', error);
             throw error;
         }
     }
 
-    async searchFile(fileName) {
+    async searchFile(file) {
         logger.info('[START] Метода searchFile для поика файла в папке');
         try {
             const pathUrl = this.pathGenerateUrl();
+            if (!fs.existsSync(pathUrl)) {
+                fs.mkdirSync(pathUrl);
+                await file.mv(path.resolve(this.pathGenerateUrl(file.name)));
+                return false;
+            }
             const listFile = await readdir(pathUrl);
-            return listFile.includes(fileName);
+            return listFile.includes(file.name);
         } catch (error) {
             console.error('Error searchFile', error);
             throw error;
